@@ -19,7 +19,7 @@ connectCloudinary()
 app.use(express.json())
 app.use(
     cors({
-      origin: "https://frontend-jayil.vercel.app",
+      origin: "https://frontend-jayil.vercel.app/",
       credentials: true,
     })
   );
