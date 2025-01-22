@@ -31,7 +31,7 @@ const transporter = nodemailer.createTransport({
 });
 // Ruta para enviar el correo
 app.post('/send-email', (req, res) => {
-    const { cartDetails, subtotal, shippingFee, total, currency, orderNumber } = req.body;
+    const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo } = req.body;
 
     // Crear el cuerpo del correo
     let cartHTML = '';
@@ -43,6 +43,16 @@ app.post('/send-email', (req, res) => {
     <div style="font-family: Arial, sans-serif; background-color: #f4f7fa; padding: 20px; max-width: 600px; margin: 0 auto; border-radius: 8px; border: 1px solid #e1e1e1;">
         <h2 style="color: #333333; font-size: 24px; text-align: center; margin-bottom: 20px;">Detalles del Carrito</h2>
         <h3 style="color: #333333; font-size: 24px; text-align: center; margin-bottom: 20px;">Numero de pedido: ${orderNumber}</h3>
+        <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            Hola: ${shippingInfo.name + shippingInfo.lastName}
+            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
+                <strong style="font-weight: bold; color: #333333;">Dirección de envío:</strong> <span style="color: #000000;">${shippingInfo.address}, ${shippingInfo.province}</span>
+            </div>
+            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
+                <strong style="font-weight: bold; color: #333333;">Teléfono:</strong> <span style="color: #000000;">${shippingInfo.phone}</span>
+            </div>
+        </div>
         <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
             ${cartHTML}
             <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
@@ -74,7 +84,7 @@ app.post('/send-email', (req, res) => {
             console.log(error);
             return res.status(500).send('Error al enviar el correo');
         }
-        console.log('Correo enviado:', info.response);
+        //console.log('Correo enviado:', info.response);
         res.status(200).send('Correo enviado exitosamente');
     });
 });
