@@ -86,10 +86,10 @@ app.post('/send-email', (req, res) => {
 });
 
 // api endpoints 
-app.use('/api/user', userRouter)
-app.use('/api/product', productRouter)
-app.use('/api/cart', cartRouter)
-app.use('/api/category', categoryRouter)
+app.use('api/user', userRouter)
+app.use('api/product', productRouter)
+app.use('api/cart', cartRouter)
+app.use('api/category', categoryRouter)
 
 app.get('/', (req,res)=>{
     res.send("Api working")
