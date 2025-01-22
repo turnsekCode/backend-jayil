@@ -17,8 +17,13 @@ connectCloudinary()
 
 //middlewares
 app.use(express.json())
-app.use(cors())
-app.options('*', cors()); // Responde a las solicitudes preflight
+const corsOptions = {
+    origin: 'https://frontend-jayil.vercel.app', // Cambia por el dominio permitido
+    methods: ['GET', 'POST'], // Métodos HTTP permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+};
+
+app.use(cors(corsOptions));
 
 
 
