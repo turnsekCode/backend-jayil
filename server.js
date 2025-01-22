@@ -34,10 +34,36 @@ app.post('/send-email', (req, res) => {
     const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo } = req.body;
 
     // Crear el cuerpo del correo
-    let cartHTML = '';
+    let cartHTML = `
+  <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+    <thead>
+      <tr>
+        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Producto</th>
+        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Precio</th>
+        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Imagen</th>
+      </tr>
+    </thead>
+    <tbody>
+`;
+
     cartDetails.forEach(item => {
-        cartHTML += `<p>${item.name} x${item.quantity} - ${currency} ${item.price}</p>`;
+        cartHTML += `
+    <tr style="border-bottom: 1px solid #ddd;">
+      <td style="padding: 10px 0; font-size: 14px;">${item.name} x${item.quantity}</td>
+      <td style="padding: 10px 0; font-size: 14px;">${currency} ${item.price.toFixed(2)}</td>
+      <td style="padding: 10px 0; text-align: center;">
+        <img style="width: 40px; height: 40px; object-fit: cover;" src="${item.image}" alt="${item.name}" />
+      </td>
+    </tr>
+  `;
     });
+
+    cartHTML += `
+    </tbody>
+  </table>
+`;
+
+
 
     const emailContent = `
     <div style="font-family: Arial, sans-serif; background-color: #f4f7fa; padding: 20px; max-width: 600px; margin: 0 auto; border-radius: 8px; border: 1px solid #e1e1e1;">
@@ -95,8 +121,8 @@ app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/category', categoryRouter)
 
-app.get('/', (req,res)=>{
+app.get('/', (req, res) => {
     res.send("Api working")
 })
 
-app.listen(port, ()=> console.log('Servidor corriendo en puerto:' + port))
+app.listen(port, () => console.log('Servidor corriendo en puerto:' + port))
