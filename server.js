@@ -17,12 +17,7 @@ connectCloudinary()
 
 //middlewares
 app.use(express.json())
-app.use(
-    cors({
-      origin: "https://frontend-jayil.vercel.app/",
-      credentials: true,
-    })
-  );
+app.use(cors())
 
 
 
@@ -85,10 +80,10 @@ app.post('/send-email', (req, res) => {
 });
 
 // api endpoints 
-app.use('api/user', userRouter)
-app.use('api/product', productRouter)
-app.use('api/cart', cartRouter)
-app.use('api/category', categoryRouter)
+app.use('/api/user', userRouter)
+app.use('/api/product', productRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/category', categoryRouter)
 
 app.get('/', (req,res)=>{
     res.send("Api working")
