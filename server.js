@@ -8,6 +8,7 @@ import productRouter from './routes/productRoute.js'
 import cartRouter from './routes/cartRoute.js'
 import nodemailer from 'nodemailer';
 import categoryRouter from './routes/categoryRoute.js'
+import orderRoute from './routes/orderRoute.js'
 
 // App config
 const app = express()
@@ -115,11 +116,46 @@ app.post('/send-email', (req, res) => {
     });
 });
 
+app.post('/send-email-status', async (req, res) => {
+    const { orderId, status, email, orderNumber } = req.body;
+  
+    if (!orderId || !status || !email || !orderNumber) {
+      return res.status(400).json({ success: false, message: 'Faltan datos requeridos.' });
+    }
+  
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: `Estado de tu pedido: ${orderNumber}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
+          <h2 style="color: #C15470;">¡Hola!</h2>
+          <p>Queremos informarte que el estado de tu pedido <strong>${orderNumber}</strong> ha cambiado.</p>
+          <p><strong>Nuevo estado:</strong> ${status}</p>
+          <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          <p>Gracias por tu preferencia.</p>
+          <footer style="margin-top: 20px; font-size: 12px; color: #888;">
+            <p>Atentamente,</p>
+            <p>El equipo de nuestra tienda</p>
+          </footer>
+        </div>
+      `,
+    };
+  
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ success: true, message: 'Correo enviado con éxito.' });
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Error al enviar el correo.', error });
+    }
+  });
+
 // api endpoints 
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/category', categoryRouter)
+app.use('/api/order', orderRoute)
 
 app.get('/', (req, res) => {
     res.send("Api working")
