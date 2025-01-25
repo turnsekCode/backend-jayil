@@ -24,110 +24,139 @@ app.use(cors())
 
 // Configuración de Nodemailer (reemplaza con tus credenciales)
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Usa el servicio que prefieras
-    auth: {
-        user: 'pixel.tech.t@gmail.com', // Reemplaza con tu correo
-        pass: 'uifc sttc klfd qlqq', // Reemplaza con tu contraseña
-    },
+  service: 'gmail', // Usa el servicio que prefieras
+  auth: {
+    user: 'pixel.tech.t@gmail.com', // Reemplaza con tu correo
+    pass: 'uifc sttc klfd qlqq', // Reemplaza con tu contraseña
+  },
 });
 // Ruta para enviar el correo
 app.post('/send-email', (req, res) => {
-    const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo } = req.body;
+  const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo, discount } = req.body;
 
-    // Crear el cuerpo del correo
-    let cartHTML = `
-  <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <thead>
-      <tr>
-        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Producto</th>
-        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Precio</th>
-        <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Imagen</th>
-      </tr>
-    </thead>
-    <tbody>
-`;
-
-    cartDetails.forEach(item => {
-        cartHTML += `
-    <tr style="border-bottom: 1px solid #ddd;">
-      <td style="padding: 10px 0; font-size: 14px;">${item.name} x${item.quantity}</td>
-      <td style="padding: 10px 0; font-size: 14px;">${currency} ${item.price.toFixed(2)}</td>
-      <td style="padding: 10px 0; text-align: center;">
-        <img style="width: 40px; height: 40px; object-fit: cover;" src="${item.image}" alt="${item.name}" />
-      </td>
-    </tr>
-  `;
-    });
-
-    cartHTML += `
-    </tbody>
-  </table>
-`;
-
-
-
-    const emailContent = `
-    <div style="font-family: Arial, sans-serif; background-color: #f4f7fa; padding: 20px; max-width: 600px; margin: 0 auto; border-radius: 8px; border: 1px solid #e1e1e1;">
-        <h2 style="color: #333333; font-size: 24px; text-align: center; margin-bottom: 20px;">Detalles del Carrito</h2>
-        <h3 style="color: #333333; font-size: 24px; text-align: center; margin-bottom: 20px;">Numero de pedido: ${orderNumber}</h3>
-        <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-            Hola: ${shippingInfo.name + shippingInfo.lastName}
-            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
-            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Dirección de envío:</strong> <span style="color: #000000;">${shippingInfo.address}, ${shippingInfo.province}</span>
-            </div>
-            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Teléfono:</strong> <span style="color: #000000;">${shippingInfo.phone}</span>
-            </div>
+  if (!cartDetails || !subtotal || !shippingFee || !total || !currency || !orderNumber || !shippingInfo || !discount) {
+  const emailContent = `
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gracias por tu compra</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333;">
+    <div style="max-width: 900px; margin: 0 auto; background-color: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <!-- Cabecera -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://res.cloudinary.com/dqfb8uqop/image/upload/v1737834820/logo_pck5bh.png" alt="Logo" style="max-width: 150px;">
         </div>
-        <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-            ${cartHTML}
-            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
-            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${currency} ${subtotal.toFixed(2)}</span>
-            </div>
-            <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Shipping Fee:</strong> <span style="color: #000000;">${shippingFee}</span>
-            </div>
-            <div style="font-size: 18px; color: #333333; font-weight: bold; margin-top: 20px;">
-                <strong>Total:</strong> <span style="color: #e53935;">${currency} ${total.toFixed(2)}</span>
-            </div>
+        
+        <!-- Asunto y Encabezado -->
+        <h2 style="color: #2c3e50; text-align: center;">¡Gracias por tu compra, <span style="font-weight: bold;">${shippingInfo?.name}</span>!</h2>
+        <p style="font-size: 16px; text-align: center; color: #7f8c8d;">Número de pedido: <span style="font-weight: bold;">${orderNumber}</span></p>
+        
+        <!-- Mensaje Personalizado -->
+        <p style="font-size: 16px; line-height: 1.6; color: #34495e;">
+            Hola <span style="font-weight: bold;">${shippingInfo?.name}</span>,<br><br>
+            Muchas gracias por tu pedido, ¡Estamos emocionados de que esta creación llegue a tus manos!<br><br>
+            Dirección de envío:<br>
+            ${shippingInfo?.address}, ${shippingInfo?.province},${shippingInfo?.postalCode}, ${shippingInfo?.country}<br>
+            Teléfono: ${shippingInfo?.phone}<br><br>
+            <p style="font-size: 16px; color: #34495e; font-weight: bold; margin-bottom: 10px;">Detalles del producto</p>
+        </p>
+
+        <!-- Tabla de Detalles del Pedido -->
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Producto</th>
+                    <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Precio</th>
+                    <th style="text-align: left; padding-bottom: 10px; font-size: 14px; border-bottom: 1px solid #ddd;">Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${cartDetails.map(item => `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px 0; font-size: 14px;">${item.name} x ${item.quantity}</td>
+                        <td style="padding: 10px 0; font-size: 14px;">${currency} ${item.price.toFixed(2)}</td>
+                        <td style="padding: 10px 0; text-align: center;">
+                            <img style="width: 40px; height: 40px; object-fit: cover;" src="${item.image}" alt="${item.name}" />
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <!-- Precio y Total -->
+        <div style="font-size: 16px; color: #555555; margin-bottom: 10px; margin-top: 20px;">
+            <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${currency} ${subtotal.toFixed(2)}</span>
+        </div>
+        <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
+            <strong style="font-weight: bold; color: #333333;">Shipping Fee:</strong> <span style="color: #000000;">${shippingFee}</span>
+        </div>
+        <div style="font-size: 18px; color: #333333; font-weight: bold; margin-top: 20px;">
+            <strong>Total:</strong> <span style="color: #C15470;">${currency} ${total.toFixed(2)}</span>
+        </div>
+
+        <!-- Tiempo de Entrega -->
+        <p style="font-size: 16px; line-height: 1.6; color: #34495e; margin-top: 20px;">
+            Recuerda que el tiempo estimado de entrega es entre 3 a 4 días laborables.
+        </p>
+        
+        <!-- Botón de WhatsApp -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="https://wa.me/651148387" target="_blank" style="display: inline-block; background-color: #25d366; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-size: 16px; font-weight: bold;">
+                Contáctanos en WhatsApp
+            </a>
+        </div>
+
+        <!-- Recordatorio de Compartir -->
+        <p style="font-size: 16px; line-height: 1.6; color: #34495e; text-align: center; margin-top: 30px;">
+            No olvides compartirnos cómo usas tu nueva pieza, ¡nos encantaría verlo en acción!<br><br>
+            Disfruta mucho de tu compra.
+        </p>
+
+        <!-- Pie de página -->
+        <div style="text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 40px;">
+            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
         </div>
     </div>
+</body>
+</html>
+
 `;
 
 
-    // Configuración del correo
-    const mailOptions = {
-        from: 'pixel.tech.t@gmail.com',
-        to: 'pixel.tech.t@gmail.com', // Correo del destinatario
-        subject: 'Detalles del Carrito',
-        html: emailContent,
-    };
+  // Configuración del correo
+  const mailOptions = {
+    from: 'pixel.tech.t@gmail.com',
+    to: 'pixel.tech.t@gmail.com', // Correo del destinatario
+    subject: `Estado de tu pedido: ${orderNumber}`,
+    html: emailContent,
+  };
 
-    // Enviar correo
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log(error);
-            return res.status(500).send('Error al enviar el correo');
-        }
-        //console.log('Correo enviado:', info.response);
-        res.status(200).send('Correo enviado exitosamente');
-    });
+  // Enviar correo
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+    res.status(200).json({ success: true, message: 'Correo enviado exitosamente' });
+  });
+}
 });
 
 app.post('/send-email-status', async (req, res) => {
-    const { orderId, status, email, orderNumber } = req.body;
-  
-    if (!orderId || !status || !email || !orderNumber) {
-      return res.status(400).json({ success: false, message: 'Faltan datos requeridos.' });
-    }
-  
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: `Estado de tu pedido: ${orderNumber}`,
-      html: `
+  const { orderId, status, email, orderNumber } = req.body;
+
+  if (!orderId || !status || !email || !orderNumber) {
+    return res.status(400).json({ success: false, message: 'Faltan datos requeridos.' });
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: `Estado de tu pedido: ${orderNumber}`,
+    html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
           <h2 style="color: #C15470;">¡Hola!</h2>
           <p>Queremos informarte que el estado de tu pedido <strong>${orderNumber}</strong> ha cambiado.</p>
@@ -140,15 +169,15 @@ app.post('/send-email-status', async (req, res) => {
           </footer>
         </div>
       `,
-    };
-  
-    try {
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ success: true, message: 'Correo enviado con éxito.' });
-    } catch (error) {
-      res.status(500).json({ success: false, message: 'Error al enviar el correo.', error });
-    }
-  });
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: 'Correo enviado con éxito.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error al enviar el correo.', error });
+  }
+});
 
 // api endpoints 
 app.use('/api/user', userRouter)
@@ -158,7 +187,7 @@ app.use('/api/category', categoryRouter)
 app.use('/api/order', orderRoute)
 
 app.get('/', (req, res) => {
-    res.send("Api working")
+  res.send("Api working")
 })
 
 app.listen(port, () => console.log('Servidor corriendo en puerto:' + port))
