@@ -188,7 +188,7 @@ const placeOrderSumUp = async (req, res) => {
         }
       );
   
-      console.log("✅ Checkout creado:", checkoutResponse.data);
+      console.log("✅ Checkout creadoo:", checkoutResponse.data);
   
       // 🔹 Devolver también el ID de la orden creada
       res.json({
