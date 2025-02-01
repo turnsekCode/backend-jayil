@@ -114,6 +114,28 @@ app.post('/send-email', (req, res) => {
             <div style="font-size: 18px; color: #333333; font-weight: bold; margin-top: 20px;">
                 <strong>Total:</strong> <span style="color: #C15470;">${currency} ${total.toFixed(2)}</span>
             </div>
+               <!-- Tiempo de Entrega -->
+        <p style="font-size: 16px; line-height: 1.6; color: #34495e; margin-top: 20px;">
+            Recuerda que el tiempo estimado de entrega es entre 3 a 4 días laborables.
+        </p>
+        
+        <!-- Botón de WhatsApp -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="https://wa.me/651148387" target="_blank" style="display: inline-block; background-color: #25d366; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-size: 16px; font-weight: bold;">
+                Contáctanos en WhatsApp
+            </a>
+        </div>
+
+        <!-- Recordatorio de Compartir -->
+        <p style="font-size: 16px; line-height: 1.6; color: #34495e; text-align: center; margin-top: 30px;">
+            No olvides compartirnos cómo usas tu nueva pieza, ¡nos encantaría verlo en acción!<br><br>
+            Disfruta mucho de tu compra.
+        </p>
+
+        <!-- Pie de página -->
+        <div style="text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 40px;">
+            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+        </div>
         </div>
     </body>
     </html>
