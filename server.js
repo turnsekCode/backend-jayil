@@ -144,7 +144,7 @@ app.post('/send-email', (req, res) => {
   // Configuración del correo
   const mailOptions = {
     from: 'pixel.tech.t@gmail.com',
-    to: 'pixel.tech.t@gmail.com', // Correo del destinatario
+    to: shippingInfo?.email, // Correo del destinatario
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
   };
