@@ -133,25 +133,9 @@ const verifyOrder = async (req, res) => {
 
 const placeOrderSumUp = async (req, res) => {
     try {
-      const { items, amount, address, orderNumber, delivery_fee } = req.body;
-      console.log("📝 Recibido:", req.body);
-  
-      let adjustedDeliveryFee = amount > 45 ? 0 : delivery_fee;
-  
-      // 🔹 Crear y guardar la orden en la base de datos
-      const newOrder = new orderModel({
-        items,
-        address,
-        orderNumber,
-        delivery_fee: adjustedDeliveryFee,
-        amount,
-        paymentMethod: "Sumup",
-        payment: false,
-        date: Date.now(),
-      });
-  
-      await newOrder.save();
-      console.log("✅ Orden guardada con éxito:", newOrder._id);  // <-- Guardamos el ID
+      const {  amount, orderNumber } = req.body;
+      //console.log("📝 Recibido:", req.body);
+
   
       // Obtener token de acceso de SumUp
       console.log("🔑 Obteniendo token de acceso de SumUp...");
@@ -192,7 +176,6 @@ const placeOrderSumUp = async (req, res) => {
   
       // 🔹 Devolver también el ID de la orden creada
       res.json({
-        orderId: newOrder._id, // <-- Devolvemos el ID
         checkoutToken: checkoutResponse.data,
       });
   
@@ -207,57 +190,88 @@ const placeOrderSumUp = async (req, res) => {
 // Verify order after payment
 const verifyOrderSumUp = async (req, res) => {
     try {
-      const { checkoutId, orderId } = req.body;  // <-- Recibimos el orderId
-        console.log("checkoutId", checkoutId)
-      // Obtener token de acceso de SumUp
-      const authResponse = await axios.post(
-        "https://api.sumup.com/token",
-        new URLSearchParams({
-          grant_type: "client_credentials",
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-        }),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      );
-  
-      const accessToken = authResponse.data.access_token;
-  
-      // Obtener estado del pago desde SumUp
-      const response = await axios.get(
-        `https://api.sumup.com/v0.1/checkouts/${checkoutId}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
+        const { checkoutId, orderData, orderCancel } = req.body;
+        const { items, amount, address, orderNumber, delivery_fee } = orderData;
+
+        console.log("📝 Recibido orderCancel:", orderCancel);
+
+        // Si orderCancel es true, no guardamos la orden y salimos temprano
+        if (orderCancel) {
+            return res.json({ success: false, message: "El pago ha sido cancelado, no se guarda la orden." });
         }
-      );
-  
-      console.log("🔍 Estado del pago:", response.data);
-  
-      if (!orderId) {
-        return res.status(400).json({ error: "Falta el ID de la orden" });
-      }
-  
-      // Buscar la orden en la base de datos
-      const order = await orderModel.findById(orderId);
-      if (!order) {
-        return res.status(404).json({ error: "Orden no encontrada" });
-      }
-  
-      if (response.data.status === "PAID") {
-        // ✅ Marcar orden como pagada
-        await orderModel.findByIdAndUpdate(orderId, { payment: true });
-        res.json({ success: true, message: "Pago confirmado" });
-      } else if (response.data.status === "FAILED") {
-        // ❌ Eliminar la orden si el pago falló
-        await orderModel.findByIdAndDelete(orderId);
-        res.json({ success: false, message: "El pago falló, orden eliminada" });
-      } else {
-        res.json({ status: "PENDING", message: "Pago en proceso" });
-      }
+
+        let adjustedDeliveryFee = amount > 45 ? 0 : delivery_fee;
+
+        // Si orderCancel es falso, creamos y guardamos la orden
+        const newOrder = new orderModel({
+            items,
+            address,
+            orderNumber,
+            delivery_fee: adjustedDeliveryFee,
+            amount,
+            paymentMethod: "Sumup",
+            payment: false,
+            date: Date.now(),
+        });
+
+        await newOrder.save();
+
+        console.log("✅ Orden guardada con éxito:", newOrder._id);  // <-- Guardamos el ID
+        let orderId = newOrder._id;
+
+        // 🔹 Crear y guardar la orden en la base de datos
+        console.log("checkoutId", checkoutId);
+
+        // Obtener token de acceso de SumUp
+        const authResponse = await axios.post(
+            "https://api.sumup.com/token",
+            new URLSearchParams({
+                grant_type: "client_credentials",
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+            }),
+            { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        );
+
+        const accessToken = authResponse.data.access_token;
+
+        // Obtener estado del pago desde SumUp
+        const response = await axios.get(
+            `https://api.sumup.com/v0.1/checkouts/${checkoutId}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }
+        );
+
+        console.log("🔍 Estado del pago:", response.data);
+
+        if (!orderId) {
+            return res.status(400).json({ error: "Falta el ID de la orden" });
+        }
+
+        // Buscar la orden en la base de datos
+        const order = await orderModel.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ error: "Orden no encontrada" });
+        }
+
+        if (response.data.status === "PAID") {
+            // ✅ Marcar orden como pagada
+            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            res.json({ success: true, message: "Pago confirmado" });
+        } else if (response.data.status === "FAILED") {
+            // ❌ Eliminar la orden si el pago falló
+            await orderModel.findByIdAndDelete(orderId);
+            res.json({ success: false, message: "El pago falló, orden eliminada" });
+        } else {
+            res.json({ status: "PENDING", message: "Pago en proceso" });
+        }
     } catch (error) {
-      console.error("❌ Error al verificar el pago:", error);
-      res.status(500).json({ error: "Error al verificar el pago" });
+        console.error("❌ Error al verificar el pago:", error);
+        res.status(500).json({ error: "Error al verificar el pago" });
     }
-  };
+};
+
   
 
 

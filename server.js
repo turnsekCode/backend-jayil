@@ -32,7 +32,7 @@ const transporter = nodemailer.createTransport({
 });
 // Ruta para enviar el correo
 app.post('/send-email', (req, res) => {
-  const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo, discount } = req.body;
+  const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo, discount, paymentType } = req.body;
 
   // Verificar si faltan datos obligatorios
   if (!cartDetails || !subtotal || !shippingFee || !total || !currency || !orderNumber || !shippingInfo || discount === undefined) {
@@ -105,9 +105,12 @@ app.post('/send-email', (req, res) => {
                 <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${currency} ${subtotal.toFixed(2)}</span>
             </div>
             <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Shipping Fee:</strong> <span style="color: #000000;">${currency} ${shippingFee}</span>
+                <strong style="font-weight: bold; color: #333333;">Tarifa de envio:</strong> <span style="color: #000000;">${shippingFee}</span>
             </div>
             ${discountBlock}
+             <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
+                <strong style="font-weight: bold; color: #333333;">Tipo de pago:</strong> <span style="color: #000000;">${paymentType}</span>
+            </div>
             <div style="font-size: 18px; color: #333333; font-weight: bold; margin-top: 20px;">
                 <strong>Total:</strong> <span style="color: #C15470;">${currency} ${total.toFixed(2)}</span>
             </div>
