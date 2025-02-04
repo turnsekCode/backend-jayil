@@ -121,7 +121,7 @@ app.post('/send-email', (req, res) => {
         
         <!-- Botón de WhatsApp -->
         <div style="text-align: center; margin-top: 20px;">
-            <a href="https://wa.me/651148387" target="_blank" style="display: inline-block; background-color: #25d366; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-size: 16px; font-weight: bold;">
+            <a href="https://wa.me/672563452" target="_blank" style="display: inline-block; background-color: #25d366; color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-size: 16px; font-weight: bold;">
                 Contáctanos en WhatsApp
             </a>
         </div>

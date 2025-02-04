@@ -22,7 +22,7 @@ const placeOrder = async (req,res) => {
             address,
             orderNumber,
             amount, 
-            paymentMethod: 'COD',
+            paymentMethod: 'WhatsApp',
             payment: false,
             date: Date.now()
         }
