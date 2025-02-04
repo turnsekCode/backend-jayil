@@ -144,7 +144,7 @@ app.post('/send-email', (req, res) => {
   // Configuración del correo
   const mailOptions = {
     from: 'pixel.tech.t@gmail.com',
-    to: `${shippingInfo?.email}, pixel.tech.t@gmail.com`, // Correo del destinatario
+    to: `${shippingInfo?.email}, pixel.tech.t@gmail.com, jayil.artesania@gmail.com`, // Correo del destinatario
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
   };
@@ -168,8 +168,8 @@ app.post('/send-email-status', async (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
+    from: 'pixel.tech.t@gmail.com',
+    to: `${email},jayil.artesania@gmail.com`,
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
