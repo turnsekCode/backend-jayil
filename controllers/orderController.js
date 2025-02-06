@@ -8,6 +8,7 @@ const deliveryCharge = 4
 
 const CLIENT_ID = process.env.SUMUP_CLIENT_ID;
 const CLIENT_SECRET = process.env.SUMUP_CLIENT_SECRET;
+const EMAIL_SECRET = process.env.SUMUP_CORREO;
 // Stripe config
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -161,8 +162,8 @@ const placeOrderSumUp = async (req, res) => {
           currency: "EUR",
           checkout_reference: orderNumber,
           return_url: "http://localhost:4000/webhook/sumup",
-          pay_to_email: "4b3a3ce28a504ba388a6269f0291411b@developer.sumup.com",
-          returnUrl: "http://localhost:3000/success",
+          pay_to_email: EMAIL_SECRET,
+          returnUrl: "https://frontend-jayil.vercel.app/success",
         },
         {
           headers: {
