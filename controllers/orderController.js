@@ -263,7 +263,7 @@ const verifyOrderSumUp = async (req, res) => {
         } else if (response.data.status === "FAILED") {
             // ❌ Eliminar la orden si el pago falló
             await orderModel.findByIdAndDelete(orderId);
-            res.json({ success: false, message: "El pago falló, orden eliminada" });
+            res.json({ success: false, message: "Hubo un problema al procesar el pago" });
         } else {
             res.json({ status: "PENDING", message: "Pago en proceso" });
         }
