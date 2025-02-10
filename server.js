@@ -26,8 +26,8 @@ app.use(cors({ origin: "*", credentials: true }));
 const transporter = nodemailer.createTransport({
   service: 'gmail', // Usa el servicio que prefieras
   auth: {
-    user: 'pixel.tech.t@gmail.com', // Reemplaza con tu correo
-    pass: 'uifc sttc klfd qlqq', // Reemplaza con tu contraseña
+    user: 'jayil.artesania@gmail.com', // Reemplaza con tu correo
+    pass: 'fsun lgqw dvrw yrwh', // Reemplaza con tu contraseña: contraseña pixel: uifc sttc klfd qlqq
   },
 });
 // Ruta para enviar el correo
@@ -143,7 +143,7 @@ app.post('/send-email', (req, res) => {
 
   // Configuración del correo
   const mailOptions = {
-    from: 'pixel.tech.t@gmail.com',
+    from: 'jayil.artesania@gmail.com',
     to: `${shippingInfo?.email}, pixel.tech.t@gmail.com, jayil.artesania@gmail.com`, // Correo del destinatario
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
@@ -168,8 +168,8 @@ app.post('/send-email-status', async (req, res) => {
   }
 
   const mailOptions = {
-    from: 'pixel.tech.t@gmail.com',
-    to: `${email},jayil.artesania@gmail.com`,
+    from: 'jayil.artesania@gmail.com',
+    to: `${email},jayil.artesania@gmail.com,pixel.tech.t@gmail.com`,
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
