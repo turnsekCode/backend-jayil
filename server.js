@@ -162,14 +162,13 @@ app.post('/send-email', (req, res) => {
 
 app.post('/send-email-status', async (req, res) => {
   const { orderId, status, email, orderNumber } = req.body;
-
   if (!orderId || !status || !email || !orderNumber) {
     return res.status(400).json({ success: false, message: 'Faltan datos requeridos.' });
   }
 
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
-    to: `${email},jayil.artesania@gmail.com,pixel.tech.t@gmail.com`,
+    to: [email, 'pixel.tech.t@gmail.com'],
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
