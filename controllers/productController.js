@@ -8,7 +8,7 @@ const upload = multer();
 // function for add product
 const addProduct = async (req, res) => {
     try {
-        const { name, description, description2, price, category, subCategory, bestSeller, destacado, slug } = req.body;
+        const { name, description, description2, price, category, subCategory, bestSeller, destacado, slug, metaDescription, metaTitle, quantity } = req.body;
 
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -37,6 +37,9 @@ const addProduct = async (req, res) => {
             bestSeller: bestSeller === 'true' ? true : false,
             destacado: destacado === 'true' ? true : false,
             slug,
+            metaDescription, 
+            metaTitle, 
+            quantity,
             date: Date.now()
         });
         console.log(prodcutData);
@@ -127,7 +130,7 @@ const singleProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-      const { name, description, description2, price, category, subCategory, bestSeller, destacado, slug } = req.body;
+      const { name, description, description2, price, category, subCategory, bestSeller, destacado, slug, metaDescription, metaTitle, quantity } = req.body;
       const { id } = req.params; // ID del producto desde la URL
   
       // Obtener las imágenes subidas
@@ -190,6 +193,9 @@ const updateProduct = async (req, res) => {
       product.bestSeller = bestSeller === 'true'; // Convertir el string a booleano
       product.destacado = destacado === 'true'; // Convertir el string a booleano
       product.slug = slug;
+      product.metaDescription = metaDescription;
+      product.metaTitle = metaTitle;
+      product.quantity = quantity;
   
       // Solo actualizar las imágenes si se detectaron cambios
       if (updatedImages.toString() !== existingImages.toString()) {
