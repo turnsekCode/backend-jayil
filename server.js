@@ -106,8 +106,8 @@ app.post('/send-email', (req, res) => {
                 <tbody>
                     ${cartDetails.map(item => `
                         <tr style="border-bottom: 1px solid #ddd;">
-                            <td style="padding: 10px 0; font-size: 14px;">${item.name} x ${item.quantity}</td>
-                            <td style="padding: 10px 0; font-size: 14px;">${currency} ${item.price.toFixed(2)}</td>
+                            <td style="padding: 10px 0; font-size: 14px;">${item.name.slice(0, 30) + '...'} x ${item.quantity}</td>
+                            <td style="padding: 10px 0; font-size: 14px;">${item.price.toFixed(2)}${currency}</td>
                             <td style="padding: 10px 0; text-align: center;">
                                 <img style="width: 40px; height: 40px; object-fit: cover;" src="${item.image}" alt="${item.name}" />
                             </td>
@@ -118,7 +118,7 @@ app.post('/send-email', (req, res) => {
 
             <!-- Precio y Total -->
             <div style="font-size: 16px; color: #555555; margin-bottom: 10px; margin-top: 20px;">
-                <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${currency} ${subtotal.toFixed(2)}</span>
+                <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${subtotal.toFixed(2)}${currency}</span>
             </div>
             <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
                 <strong style="font-weight: bold; color: #333333;">Tarifa de envio:</strong> <span style="color: #000000;">${shippingFee}</span>
@@ -128,7 +128,7 @@ app.post('/send-email', (req, res) => {
                 <strong style="font-weight: bold; color: #333333;">Tipo de pago:</strong> <span style="color: #000000;">${paymentType}</span>
             </div>
             <div style="font-size: 18px; color: #333333; font-weight: bold; margin-top: 20px;">
-                <strong>Total:</strong> <span style="color: #C15470;">${currency} ${total.toFixed(2)}</span>
+                <strong>Total:</strong> <span style="color: #C15470;">${total.toFixed(2)}${currency}</span>
             </div>
                <!-- Tiempo de Entrega -->
         <p style="font-size: 16px; line-height: 1.6; color: #34495e; margin-top: 20px;">
@@ -162,7 +162,7 @@ app.post('/send-email', (req, res) => {
     from: 'jayil.artesania@gmail.com',
     to: shippingInfo?.email, // Correo del cliente
     cc: 'jayil.artesania@gmail.com',
-    bcc: ['pixel.tech.t@gmail.com'], // Copias ocultas
+    bcc: 'pixel.tech.t@gmail.com', // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
   };
@@ -189,7 +189,7 @@ app.post('/send-email-status', async (req, res) => {
     from: 'jayil.artesania@gmail.com',
     to: email,
     cc: 'jayil.artesania@gmail.com',
-    bcc: ['pixel.tech.t@gmail.com'], // Copias ocultas
+    bcc: 'pixel.tech.t@gmail.com', // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
