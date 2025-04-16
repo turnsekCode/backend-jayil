@@ -160,10 +160,12 @@ app.post('/send-email', (req, res) => {
   // Configuración del correo
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
-    to: `${shippingInfo?.email}, pixel.tech.t@gmail.com, jayil.artesania@gmail.com`, // Correo del destinatario
+    to: shippingInfo?.email, // Correo del cliente
+    bcc: ['pixel.tech.t@gmail.com', 'jayil.artesania@gmail.com'], // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
   };
+  
 
   // Enviar correo
   transporter.sendMail(mailOptions, (error, info) => {
@@ -184,7 +186,8 @@ app.post('/send-email-status', async (req, res) => {
 
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
-    to: [email, 'pixel.tech.t@gmail.com', 'jayil.artesania@gmail.com'],
+    to: email,
+    bcc: ['pixel.tech.t@gmail.com', 'jayil.artesania@gmail.com'], // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
