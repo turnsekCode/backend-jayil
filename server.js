@@ -187,7 +187,8 @@ app.post('/send-email-status', async (req, res) => {
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
     to: email,
-    bcc: ['pixel.tech.t@gmail.com', 'jayil.artesania@gmail.com'], // Copias ocultas
+    cc: 'jayil.artesania@gmail.com',
+    bcc: ['pixel.tech.t@gmail.com'], // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
