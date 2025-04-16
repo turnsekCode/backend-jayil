@@ -59,7 +59,7 @@ app.post('/send-email', (req, res) => {
   const discountBlock = discount > 0
     ? `
     <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-        <strong style="font-weight: bold; color: #333333;">Descuento aplicado:</strong> <span style="color: #000000;">${currency} ${discount.toFixed(2)}</span>
+        <strong style="font-weight: bold; color: #333333;">Descuento aplicado:</strong> <span style="color: #000000;">${discount.toFixed(2)}${currency} </span>
     </div>
     `
     : '';
