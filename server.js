@@ -161,7 +161,8 @@ app.post('/send-email', (req, res) => {
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
     to: shippingInfo?.email, // Correo del cliente
-    bcc: ['pixel.tech.t@gmail.com', 'jayil.artesania@gmail.com'], // Copias ocultas
+    cc: 'jayil.artesania@gmail.com',
+    bcc: ['pixel.tech.t@gmail.com'], // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: emailContent,
   };
