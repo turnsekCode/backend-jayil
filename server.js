@@ -18,7 +18,7 @@ connectCloudinary()
 
 //middlewares
 app.use(express.json())
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: "https://www.jayil.es/, https://admin-jayil.vercel.app/", credentials: true }));
 
 
 
@@ -152,7 +152,7 @@ app.post('/send-email', (req, res) => {
   // Enviar correo
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.log(error);
+      //console.log(error);
       return res.status(500).json({ success: false, message: error.message });
     }
     res.status(200).json({ success: true, message: 'Correo enviado exitosamente' });
@@ -196,9 +196,9 @@ app.post('/send-email-status', async (req, res) => {
 // Ruta para recibir el webhook de SumUp
 app.post("/webhook/sumup", (req, res) => {
   const { event, data } = req.body;
-console.log("webhook",req.body)
+//console.log("webhook",req.body)
   if (event === "transaction.successful") {
-    console.log("Pago recibido:", data);
+    //console.log("Pago recibido:", data);
     // Actualizar base de datos o enviar confirmación al cliente
   }
 
