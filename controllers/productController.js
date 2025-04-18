@@ -42,14 +42,14 @@ const addProduct = async (req, res) => {
             quantity,
             date: Date.now()
         });
-        console.log(prodcutData);
+        //console.log(prodcutData);
         const product = new productModel(prodcutData);
         await product.save();
 
 
         res.json({ success: true, message: "Product added successfully" });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 }
@@ -61,7 +61,7 @@ const listProducts = async (req, res) => {
         const products = await productModel.find({});
         res.json({ success: true, products });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
 
     }
@@ -74,7 +74,7 @@ const removeProduct2 = async (req, res) => {
         await productModel.findByIdAndDelete(req.body.id);
         res.json({ success: true, message: "Product removed successfully" });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
 
     }
@@ -122,7 +122,7 @@ const singleProduct = async (req, res) => {
         }
         res.json({ success: true, product });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 }
@@ -211,7 +211,31 @@ const updateProduct = async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
     }
   };
-  
+
+// controllers/productController.js
+const updateProductQuantity = async (req, res) => {
+    try {
+      const { id, quantity } = req.body;
+      // Buscar el producto actual
+      const product = await productModel.findById(id);
+      if (!product) {
+        return res.status(404).json({ success: false, message: "Producto no encontrado" });
+      }
+      // Restar la cantidad
+      const nuevaCantidad = product.quantity - quantity;
+      // Evitar cantidades negativas
+      if (nuevaCantidad < 0) {
+        return res.status(400).json({ success: false, message: "No hay suficiente stock disponible." });
+      }
+      // Actualizar la cantidad
+      product.quantity = nuevaCantidad;
+      await product.save();
+      res.json({ success: true, message: "Cantidad actualizada", product });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
   
   
   
@@ -219,4 +243,4 @@ const updateProduct = async (req, res) => {
   
   
 
-export { addProduct, listProducts, removeProduct, singleProduct, updateProduct };
+export { addProduct, listProducts, removeProduct, singleProduct, updateProduct, updateProductQuantity };

@@ -10,7 +10,7 @@ const addCategory = async (req, res) => {
 
         res.json({ success: true, message: "Categoría añadida exitosamente", data: newCategory });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -21,7 +21,7 @@ const listCategories = async (req, res) => {
         const categories = await categoryModel.find({});
         res.json({ success: true, categories });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -32,7 +32,7 @@ const removeCategory = async (req, res) => {
         await categoryModel.findByIdAndDelete(req.body.id);
         res.json({ success: true, message: "Categoría eliminada exitosamente" });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -49,7 +49,7 @@ const singleCategory = async (req, res) => {
 
         res.json({ success: true, category });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -64,7 +64,7 @@ const updateCategory = async (req, res) => {
         res.json({ success: true, message: "Categoría actualizada exitosamente", data: updatedCategory });
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 }

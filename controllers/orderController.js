@@ -35,7 +35,7 @@ const placeOrder = async (req,res) => {
 
 
     } catch (error) {
-        console.log(error)
+        //console.log(error)
         res.json({success:false,message:error.message})
     }
 
@@ -108,7 +108,7 @@ const placeOrderStripe = async (req, res) => {
 
         res.json({ success: true, session_url: session.url });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
@@ -116,7 +116,7 @@ const placeOrderStripe = async (req, res) => {
 // Verify order after payment
 const verifyOrder = async (req, res) => {
     const { orderId, success } = req.body;
-    console.log("req.body", req.body);  // Verifica que los datos estén llegando
+    //console.log("req.body", req.body);  // Verifica que los datos estén llegando
 
     try {
         if (success === 'true') {
@@ -127,7 +127,7 @@ const verifyOrder = async (req, res) => {
             res.json({ success: false, message: 'Order failed' });
         }
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         res.json({ success: false, message: error.message });
     }
 };
@@ -139,7 +139,7 @@ const placeOrderSumUp = async (req, res) => {
 
   
       // Obtener token de acceso de SumUp
-      console.log("🔑 Obteniendo token de acceso de SumUp...");
+      //console.log("🔑 Obteniendo token de acceso de SumUp...");
       const authResponse = await axios.post(
         "https://api.sumup.com/token",
         new URLSearchParams({
@@ -150,11 +150,11 @@ const placeOrderSumUp = async (req, res) => {
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
       );
   
-      console.log("🔐 Token recibido:", authResponse.data);
+      //console.log("🔐 Token recibido:", authResponse.data);
       const accessToken = authResponse.data.access_token;
-  console.log("🔐 Token recibido:", authResponse.data);
+      //console.log("🔐 Token recibido:", authResponse.data);
       // Crear el checkout en SumUp
-      console.log("💳 Creando checkout en SumUp...");
+      //console.log("💳 Creando checkout en SumUp...");
       const checkoutResponse = await axios.post(
         "https://api.sumup.com/v0.1/checkouts",
         {
@@ -173,7 +173,7 @@ const placeOrderSumUp = async (req, res) => {
         }
       );
   
-      console.log("✅ Checkout creadoo:", checkoutResponse.data);
+      //console.log("✅ Checkout creadoo:", checkoutResponse.data);
   
       // 🔹 Devolver también el ID de la orden creada
       res.json({
@@ -194,7 +194,7 @@ const verifyOrderSumUp = async (req, res) => {
         const { checkoutId, orderData, orderCancel } = req.body;
         const { items, amount, address, orderNumber, delivery_fee } = orderData;
 
-        console.log("📝 Recibido orderCancel:", orderCancel);
+        //console.log("📝 Recibido orderCancel:", orderCancel);
 
         // Si orderCancel es true, no guardamos la orden y salimos temprano
         if (orderCancel) {
@@ -217,11 +217,11 @@ const verifyOrderSumUp = async (req, res) => {
 
         await newOrder.save();
 
-        console.log("✅ Orden guardada con éxito:", newOrder._id);  // <-- Guardamos el ID
+        //console.log("✅ Orden guardada con éxito:", newOrder._id);  // <-- Guardamos el ID
         let orderId = newOrder._id;
 
         // 🔹 Crear y guardar la orden en la base de datos
-        console.log("checkoutId", checkoutId);
+        //console.log("checkoutId", checkoutId);
 
         // Obtener token de acceso de SumUp
         const authResponse = await axios.post(
@@ -244,7 +244,7 @@ const verifyOrderSumUp = async (req, res) => {
             }
         );
 
-        console.log("🔍 Estado del pago:", response.data);
+        //console.log("🔍 Estado del pago:", response.data);
 
         if (!orderId) {
             return res.status(400).json({ error: "Falta el ID de la orden" });
@@ -284,7 +284,7 @@ const allOrders = async (req,res) => {
         const orders = await orderModel.find({})
         res.json({success:true,orders})
     } catch (error) {
-        console.log(error)
+        //console.log(error)
         res.json({success:false,message:error.message})
     }
 }
@@ -303,7 +303,7 @@ const updateStatus = async (req,res) => {
         await orderModel.findOneAndUpdate({_id:orderId},{status})
         res.json({success:true,message:"Order status updated"})
     } catch (error) {
-        console.log(error)
+        //console.log(error)
         res.json({success:false,message:error.message})
     }
 

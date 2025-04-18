@@ -21,7 +21,8 @@ app.use(express.json())
 //app.use(cors({ origin: "*", credentials: true }));
 const allowedOrigins = [
   "https://www.jayil.es",
-  "https://admin-jayil.vercel.app"
+  "https://admin-jayil.vercel.app",
+  "http://localhost:5173"
 ];
 
 app.use(cors({
@@ -185,6 +186,31 @@ app.post('/send-email-status', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Faltan datos requeridos.' });
   }
 
+  // Función para obtener el mensaje según el estado
+  const getStatusMessage = (status) => {
+    switch (status) {
+      case 'Empacando':
+        return `<h2 style="color: #C15470;">¡Hola!</h2>
+        <p>Tenemos noticias emocionantes de tu pedido: <strong>${orderNumber}</strong></p>
+        <p><strong>Nuevo estado:</strong> ${status}</p>
+        <p>Empaquetamos con cuidado y detalle, estimamos que llegará a tu dirección en 3 a 4 días hábiles por Correos.
+        ¿Tienes alguna pregunta o inquietud? No dudes en hacérnoslo saber. Estamos aquí para ayudarte.</p>
+        <p>Gracias por elegirnos.</p>`;
+      case 'Enviado':
+        return `<h2 style="color: #C15470;">¡Hola!</h2>
+        <p>¡Buenas noticias!</p>
+        <p>Tu pedido: <strong>${orderNumber}</strong> ya fué enviado y está en camino hacia ti.</p>
+        <p><strong>Nuevo estado:</strong> ${status}</p>
+        <p>Estimamos que llegará a tu dirección en 3 a 4 días hábiles por Correos. Esperamos que estés emocionado de recibir tu pedido. Si tienes alguna pregunta o inquietud, no dudes en hacérnoslo saber. Estamos aquí para ayudarte.</p>
+        <p>Nuevamente, gracias por elegirnos.</p>`;
+      default:
+        return `Si tienes alguna pregunta, no dudes en contactarnos.`;
+    }
+  };
+
+  // Generar el HTML dinámico
+  const statusMessage = getStatusMessage(status);
+
   const mailOptions = {
     from: 'jayil.artesania@gmail.com',
     to: email,
@@ -192,18 +218,14 @@ app.post('/send-email-status', async (req, res) => {
     bcc: 'pixel.tech.t@gmail.com', // Copias ocultas
     subject: `Estado de tu pedido: ${orderNumber}`,
     html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
-          <h2 style="color: #C15470;">¡Hola!</h2>
-          <p>Queremos informarte que el estado de tu pedido <strong>${orderNumber}</strong> ha cambiado.</p>
-          <p><strong>Nuevo estado:</strong> ${status}</p>
-          <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-          <p>Gracias por tu preferencia.</p>
-          <footer style="margin-top: 20px; font-size: 12px; color: #888;">
-            <p>Atentamente,</p>
-            <p>El equipo de nuestra tienda</p>
-          </footer>
-        </div>
-      `,
+      <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; border-radius: 10px; max-width: 600px; margin: auto;">
+        ${statusMessage}
+        <footer style="margin-top: 20px; font-size: 12px; color: #888;">
+          <p>Atentamente,</p>
+          <p>El equipo de nuestra tienda</p>
+        </footer>
+      </div>
+    `,
   };
 
   try {
@@ -213,6 +235,7 @@ app.post('/send-email-status', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error al enviar el correo.', error });
   }
 });
+
 
 // Ruta para recibir el webhook de SumUp
 app.post("/webhook/sumup", (req, res) => {

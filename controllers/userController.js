@@ -27,7 +27,7 @@ const loginUser = async (req,res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({success: false, message: error.message});
         
     }
@@ -71,7 +71,7 @@ const registerUser = async (req,res) => {
         res.status(200).json({success: true, message: "User registered successfully", token});
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({success: false, message: error.message});
     }
 }
@@ -88,7 +88,7 @@ try {
         res.json({success: false, message: "Invalid credentials"});
     }
 } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({success: false, message: error.message});
 }
 
