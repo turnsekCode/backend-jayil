@@ -22,7 +22,8 @@ app.use(express.json())
 const allowedOrigins = [
   "https://www.jayil.es",
   "https://admin-jayil.vercel.app",
-  "http://localhost:5173"
+  "http://localhost:5173",
+  "http://localhost:5174"
 ];
 
 app.use(cors({
@@ -164,7 +165,7 @@ app.post('/send-email', (req, res) => {
     to: shippingInfo?.email, // Correo del cliente
     cc: 'jayil.artesania@gmail.com',
     bcc: 'pixel.tech.t@gmail.com', // Copias ocultas
-    subject: `Estado de tu pedido: ${orderNumber}`,
+    subject: `Pedido realizado`,
     html: emailContent,
   };
   
@@ -204,7 +205,11 @@ app.post('/send-email-status', async (req, res) => {
         <p>Estimamos que llegará a tu dirección en 3 a 4 días hábiles por Correos. Esperamos que estés emocionado de recibir tu pedido. Si tienes alguna pregunta o inquietud, no dudes en hacérnoslo saber. Estamos aquí para ayudarte.</p>
         <p>Nuevamente, gracias por elegirnos.</p>`;
       default:
-        return `Si tienes alguna pregunta, no dudes en contactarnos.`;
+        return `<h2 style="color: #C15470;">¡Hola!</h2>
+          <p>Queremos informarte que el estado de tu pedido <strong>${orderNumber}</strong> ha cambiado.</p>
+          <p><strong>Nuevo estado:</strong> ${status}</p>
+          <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          <p>Gracias por tu preferencia.</p>`;
     }
   };
 
