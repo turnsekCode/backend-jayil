@@ -50,7 +50,7 @@ const transporter = nodemailer.createTransport({
 });
 // Ruta para enviar el correo
 app.post('/send-email', (req, res) => {
-  const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo, discount, paymentType } = req.body;
+  const { cartDetails, subtotal, shippingFee, total, currency, orderNumber, shippingInfo, discount, paymentType, envioPersonal } = req.body;
 
   // Verificar si faltan datos obligatorios
   if (!cartDetails || !subtotal || !shippingFee || !total || !currency || !orderNumber || !shippingInfo || discount === undefined) {
@@ -90,9 +90,12 @@ app.post('/send-email', (req, res) => {
             <p style="font-size: 16px; line-height: 1.6; color: #34495e;">
                 Hola <span style="font-weight: bold;">${shippingInfo?.name}</span>,<br><br>
                 Muchas gracias por tu pedido, ¡Estamos emocionados de que esta creación llegue a tus manos!<br><br>
-                Dirección de envío:<br>
-                ${shippingInfo?.address}, ${shippingInfo?.province}, ${shippingInfo?.postalCode}, ${shippingInfo?.country}<br>
-                Teléfono: ${shippingInfo?.phone}<br><br>
+                ${!envioPersonal ? `
+                  Dirección de envío:<br>
+                  ${shippingInfo?.address}, ${shippingInfo?.province}, ${shippingInfo?.postalCode}, ${shippingInfo?.country}<br>
+                  <br>
+                ` : ''}
+                Teléfono: ${shippingInfo?.phone}<br>
                 <p style="font-size: 16px; color: #34495e; font-weight: bold; margin-bottom: 10px;">Detalles del producto</p>
             </p>
 
@@ -123,7 +126,7 @@ app.post('/send-email', (req, res) => {
                 <strong style="font-weight: bold; color: #333333;">Subtotal:</strong> <span style="color: #000000;">${subtotal.toFixed(2)}${currency}</span>
             </div>
             <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
-                <strong style="font-weight: bold; color: #333333;">Tarifa de envio:</strong> <span style="color: #000000;">${shippingFee}</span>
+                <strong style="font-weight: bold; color: #333333;">Tarifa de envio:</strong> <span style="color: #000000;">${!envioPersonal ? shippingFee : '0.00€'}</span>
             </div>
             ${discountBlock}
              <div style="font-size: 16px; color: #555555; margin-bottom: 10px;">
